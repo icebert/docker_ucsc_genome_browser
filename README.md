@@ -4,6 +4,9 @@ A minimal UCSC Genome Browser mirror.
 
 http://genome.ucsc.edu/
 
+### License
+This is a Dockerized version of the UCSC Genome Browser source code. The license is the same as the UCSC Genome Browser itself. The source code and executables are freely available for academic, nonprofit and personal use. Commercial use requires purchase of a license with setup fee and annual payment. See https://genome-store.ucsc.edu/.
+
 ### Download
 docker pull icebert/ucsc_genome_browser
 
