@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.3
+FROM ubuntu:16.04
 MAINTAINER Meng Wang <wangm0855@gmail.com>
 LABEL Description="UCSC Genome Browser"
 
@@ -6,36 +6,22 @@ LABEL Description="UCSC Genome Browser"
 # Install dependencies
 #
 RUN apt-get update && apt-get install -y git build-essential \
-    apache2 mysql-server \
-    mysql-client-5.5 mysql-client-core-5.5 \
+    curl apache2 mysql-server \
+    mysql-client-5.7 mysql-client-core-5.7 \
     libpng12-dev libssl-dev openssl libmysqlclient-dev && \
     apt-get clean
 
 #
 # Get browser source codes
 #
-RUN git clone git://genome-source.cse.ucsc.edu/kent.git
-RUN cd kent && git checkout -t -b beta origin/beta
-
 ENV MACHTYPE x86_64
 RUN mkdir -p ~/bin/${MACHTYPE}
-RUN rm /var/www/html/index.html && \
+RUN rm /var/www/html/index.html && mkdir /var/www/trash && \
     rsync -avzP rsync://hgdownload.cse.ucsc.edu/htdocs/ /var/www/html/
 
-#
-# Build
-#
-RUN cd /kent/src && make libs
+RUN mkdir /var/www/cgi-bin && \
+    rsync -avP rsync://hgdownload.soe.ucsc.edu/cgi-bin/ /var/www/cgi-bin/
 
-RUN mkdir -p /var/www/html/cgi-bin && mkdir -p /usr/local/apache && \
-    ln -s /var/www/html/cgi-bin /usr/local/apache/cgi-bin
-
-RUN cd /kent/src/hg && make compile && make install DESTDIR=/var/www/html \
-                                                    CGI_BIN=/cgi-bin \
-                                                    DOCUMENTROOT=/var/www/html
-
-RUN rm -r /kent && mkdir -p /var/www/trash && \
-    ln -s /var/www/html /usr/local/apache/htdocs
 
 #
 # Config db connection
@@ -56,7 +42,7 @@ RUN { \
         echo 'backupcentral.user=admin'; \
         echo 'backupcentral.password=admin'; \
         echo 'backupcentral.domain='; \
-    } > /var/www/html/cgi-bin/hg.conf
+    } > /var/www/cgi-bin/hg.conf
 
 
 #
@@ -85,8 +71,8 @@ RUN sed -i 's/<\/VirtualHost>//' /etc/apache2/sites-enabled/000-default.conf && 
         echo '    AllowOverride AuthConfig'; \
         echo '    Options +Includes'; \
         echo '</Directory>'; \
-        echo 'ScriptAlias /cgi-bin/ /var/www/html/cgi-bin/'; \
-        echo '<Directory "/var/www/html/cgi-bin">'; \
+        echo 'ScriptAlias /cgi-bin/ /var/www/cgi-bin/'; \
+        echo '<Directory "/var/www/cgi-bin">'; \
         echo '    AllowOverride None'; \
         echo '    Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch'; \
         echo '    SetHandler cgi-script'; \
