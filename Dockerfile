@@ -61,23 +61,29 @@ RUN chmod +x /etc/cron.daily/genomebrowser
 #
 # Config apache
 #
-RUN { \
-        echo 'XBitHack on'; \
-    } >> /etc/apache2/apache2.conf
-
 RUN sed -i 's/<\/VirtualHost>//' /etc/apache2/sites-enabled/000-default.conf && \
     { \
+        echo 'XBitHack on'; \
+        echo ''; \
         echo '<Directory /var/www/html>'; \
-        echo '    AllowOverride AuthConfig'; \
         echo '    Options +Includes'; \
         echo '</Directory>'; \
-        echo 'ScriptAlias /cgi-bin/ /var/www/cgi-bin/'; \
+        echo ''; \
+        echo 'ScriptAlias cgi-bin/ /var/www/cgi-bin/'; \
         echo '<Directory "/var/www/cgi-bin">'; \
         echo '    AllowOverride None'; \
         echo '    Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch'; \
         echo '    SetHandler cgi-script'; \
         echo '    Require all granted'; \
         echo '</Directory>'; \
+        echo ''; \
+        echo '<Directory /var/www/html/trash>'; \
+        echo '    Options MultiViews'; \
+        echo '    AllowOverride None'; \
+        echo '    Order allow,deny'; \
+        echo '    Allow from all'; \
+        echo '</Directory>'; \
+        echo ''; \
         echo '</VirtualHost>'; \
     } >> /etc/apache2/sites-enabled/000-default.conf
 
