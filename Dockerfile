@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y git build-essential \
 ENV MACHTYPE x86_64
 RUN mkdir -p ~/bin/${MACHTYPE}
 RUN rm /var/www/html/index.html && mkdir /var/www/trash && \
+    mkdir /usr/local/apache && ln -s /var/www/html /usr/local/apache/htdocs && \
     rsync -avzP rsync://hgdownload.cse.ucsc.edu/htdocs/ /var/www/html/
 
 RUN mkdir /var/www/cgi-bin && \
