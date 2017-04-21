@@ -29,7 +29,7 @@ First copy the basic database files into /my/data/path from docker
 ```shell
 docker run -d --name gbdb -p 3338:3306 icebert/ucsc_genome_browser_db
 
-cd /my/data/path && docker cp gbdb:/data ./ && mv data/* ./ && rm -rf data hg38
+cd /my/data/path && docker cp gbdb:/data ./ && mv data/* ./ && rm -rf data
 
 docker stop gbdb
 ```
@@ -37,6 +37,8 @@ docker stop gbdb
 Then put database files into /my/data/path. For example, mirror all the tracks of hg38 from ucsc genome browser
 
 ```shell
+rm -rf /my/data/path/hg38
+
 rsync -avP --delete --max-delete=20 rsync://hgdownload.soe.ucsc.edu/mysql/hg38 /my/data/path/
 ```
 

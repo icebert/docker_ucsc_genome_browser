@@ -6,7 +6,7 @@ LABEL Description="UCSC Genome Browser"
 # Install dependencies
 #
 RUN apt-get update && apt-get install -y git build-essential \
-    curl apache2 mysql-client-5.7 mysql-client-core-5.7 \
+    apache2 mysql-client-5.7 mysql-client-core-5.7 \
     libpng12-dev libssl-dev openssl libmysqlclient-dev && \
     apt-get clean
 
@@ -67,9 +67,7 @@ RUN sed -i 's/<\/VirtualHost>//' /etc/apache2/sites-enabled/000-default.conf && 
         echo ''; \
         echo '<Directory /var/www/html>'; \
         echo '    Options +Includes'; \
-        echo '</Directory>'; \
-        echo '<Directory /usr/local/apache/htdocs>'; \
-        echo '    Options +Includes'; \
+        echo '    SSILegacyExprParser on'; \
         echo '</Directory>'; \
         echo ''; \
         echo 'ScriptAlias /cgi-bin/ /var/www/cgi-bin/'; \
