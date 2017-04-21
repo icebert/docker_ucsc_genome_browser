@@ -68,8 +68,11 @@ RUN sed -i 's/<\/VirtualHost>//' /etc/apache2/sites-enabled/000-default.conf && 
         echo '<Directory /var/www/html>'; \
         echo '    Options +Includes'; \
         echo '</Directory>'; \
+        echo '<Directory /usr/local/apache/htdocs>'; \
+        echo '    Options +Includes'; \
+        echo '</Directory>'; \
         echo ''; \
-        echo 'ScriptAlias cgi-bin/ /var/www/cgi-bin/'; \
+        echo 'ScriptAlias /cgi-bin/ /var/www/cgi-bin/'; \
         echo '<Directory "/var/www/cgi-bin">'; \
         echo '    AllowOverride None'; \
         echo '    Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch'; \
