@@ -1,13 +1,15 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER Meng Wang <wangm0855@gmail.com>
 LABEL Description="UCSC Genome Browser"
+
+ENV DEBIAN_FRONTEND noninteractive
 
 #
 # Install dependencies
 #
-RUN apt-get update && apt-get install -y git build-essential \
-    apache2 mysql-client-5.7 mysql-client-core-5.7 \
-    libpng12-dev libssl-dev openssl libmysqlclient-dev && \
+RUN apt-get update && apt-get install -y git build-essential rsync \
+    apache2 mysql-client-5.7 mysql-client-core-5.7 libcurl4 \
+    libpng-dev libssl-dev openssl libmysqlclient-dev && \
     apt-get clean
 
 #
