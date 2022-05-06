@@ -9,7 +9,8 @@ ENV DEBIAN_FRONTEND noninteractive
 #
 RUN apt-get update && apt-get install -y git build-essential rsync \
     apache2 mysql-client-5.7 mysql-client-core-5.7 libcurl4 \
-    libpng-dev libssl-dev openssl libmysqlclient-dev && \
+    libpng-dev libssl-dev openssl libmysqlclient-dev python-mysqldb \
+    ghostscript imagemagick wget r-base-core curl gsfonts && \
     apt-get clean
 
 #
