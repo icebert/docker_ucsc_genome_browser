@@ -22,33 +22,48 @@ docker run -d --link gbdb:gbdb -p 8038:80 icebert/ucsc_genome_browser
 ```
 
 ### Run with local data files
-Assume local data is going to be stored in /my/data/path
+The dockers contain no data. Please download the data of the species you are interested in as follows.
 
-First copy the basic database files into /my/data/path from docker
+Assume local data is going to be stored in /my/data/path/gbdb and the track database is going to be stored in /my/data/path/database
+
+First copy the basic database files from docker into local /my/data/path/database
 
 ```shell
 docker run -d --name gbdb -p 3338:3306 icebert/ucsc_genome_browser_db
 
-cd /my/data/path && docker cp gbdb:/data ./ && mv data/* ./ && rm -rf data
+cd /my/data/path/database && docker cp gbdb:/data ./ && mv data/* ./ && rm -rf data
 
 docker stop gbdb
 ```
 
-Then put database files into /my/data/path. For example, mirror all the tracks of hg38 from ucsc genome browser
+Next download database files from UCSC into /my/data/path/database. For example, mirror all the tracks of hg38 from ucsc genome browser.
+For mouse (or other species), just replace hg38 with mm10 (or other species name).
 
 ```shell
-rm -rf /my/data/path/hg38
+rm -rf /my/data/path/database/hg38
 
-rsync -avP --delete --max-delete=20 rsync://hgdownload.soe.ucsc.edu/mysql/hg38 /my/data/path/
+rsync -avP --delete --max-delete=20 rsync://hgdownload.soe.ucsc.edu/mysql/hg38 /my/data/path/database/
 ```
+
+Then download basic data files from UCSC into /my/data/path/gbdb
+
+```shell
+mkdir /my/data/path/gbdb/visiGene
+
+rsync -avzP --delete --max-delete=20 rsync://hgdownload.cse.ucsc.edu/gbdb/hg38 /my/data/path/gbdb/
+```
+
 
 Finally start the database server and genome browser server
 
 ```shell
-docker run -d --name gbdb -p 3338:3306 -v /my/data/path:/data icebert/ucsc_genome_browser_db
+docker run -d --name gbdb -p 3338:3306 -v /my/data/path/database:/data icebert/ucsc_genome_browser_db
 
-docker run -d --link gbdb:gbdb -p 8038:80 icebert/ucsc_genome_browser
+docker run -d --link gbdb:gbdb -p 8038:80 -v /my/data/path/gbdb:/gbdb icebert/ucsc_genome_browser
 ```
+
+The browser would be available at port 8038.
+
 
 ### MySQL Access
 The mysql server listens on port 3338. The default username for mysql is 'admin' with password 'admin'.
