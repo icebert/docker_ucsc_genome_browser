@@ -74,5 +74,11 @@ mysql -h 127.0.0.1 -P 3338 -u admin -p
 
 
 ### Add tracks
-For adding custom tracks to the genome browser, [this post](https://bergmanlab.uga.edu/running-a-ucsc-genome-browser-mirror-iii-loading-custom-data/) describes the detailed steps.
+For adding custom tracks to the genome browser, [this post](https://bergmanlab.uga.edu/running-a-ucsc-genome-browser-mirror-iii-loading-custom-data/) and [this page](https://genome.ucsc.edu/goldenpath/help/mirrorManual.html#adding-your-own-track-groups-to-the-browser) describe the detailed steps. Briefly,
+
+1. Add a new track group in `grp` table (optional)
+
+2. add track description using `~/bin/x86_64/hgTrackDb` with `trackDb.ra` file as input
+
+3. add track with loader program based on the track type. For example, use `~/bin/x86_64/hgLoadBed` to load bed files and use `~/bin/x86_64/hgBbiDbLink` to load bigWig files.
 
