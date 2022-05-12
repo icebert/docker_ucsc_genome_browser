@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
-MAINTAINER Meng Wang <wangm0855@gmail.com>
 LABEL Description="UCSC Genome Browser"
+LABEL Maintainer="Meng Wang <wangm0855@gmail.com>"
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -17,7 +17,10 @@ RUN apt-get update && apt-get install -y git build-essential rsync \
 # Get browser source codes
 #
 ENV MACHTYPE x86_64
-RUN mkdir -p ~/bin/${MACHTYPE}
+RUN mkdir -p ~/bin/${MACHTYPE} && \
+    rsync -avP rsync://hgdownload.soe.ucsc.edu/genome/admin/exe/linux.x86_64/ ~/bin/${MACHTYPE}/ && \
+    cd && wget https://raw.githubusercontent.com/ucscGenomeBrowser/kent/master/src/hg/lib/trackDb.sql
+
 RUN rm /var/www/html/index.html && mkdir /var/www/trash && \
     mkdir /usr/local/apache && ln -s /var/www/html /usr/local/apache/htdocs && \
     rsync -avzP rsync://hgdownload.cse.ucsc.edu/htdocs/ /var/www/html/
@@ -34,6 +37,7 @@ RUN { \
         echo 'db.user=admin'; \
         echo 'db.password=admin'; \
         echo 'db.trackDb=trackDb'; \
+        echo 'db.grp=grp'; \
         echo 'defaultGenome=Human'; \
         echo 'central.db=hgcentral'; \
         echo 'central.host=gbdb'; \
@@ -45,7 +49,9 @@ RUN { \
         echo 'backupcentral.user=admin'; \
         echo 'backupcentral.password=admin'; \
         echo 'backupcentral.domain='; \
-    } > /var/www/cgi-bin/hg.conf
+    } > /var/www/cgi-bin/hg.conf && \
+    ln /var/www/cgi-bin/hg.conf ~/.hg.conf && \
+    chmod 600 ~/.hg.conf
 
 
 #
