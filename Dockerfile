@@ -49,6 +49,8 @@ RUN { \
         echo 'backupcentral.user=admin'; \
         echo 'backupcentral.password=admin'; \
         echo 'backupcentral.domain='; \
+        echo 'freeType=on'; \
+        echo 'freeTypeDir=/usr/share/fonts/type1/gsfonts'; \
     } > /var/www/cgi-bin/hg.conf && \
     ln /var/www/cgi-bin/hg.conf ~/.hg.conf && \
     chmod 600 ~/.hg.conf
