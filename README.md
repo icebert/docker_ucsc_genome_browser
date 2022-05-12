@@ -72,3 +72,7 @@ The mysql server listens on port 3338. The default username for mysql is 'admin'
 mysql -h 127.0.0.1 -P 3338 -u admin -p
 ```
 
+
+### Add tracks
+For adding custom tracks to the genome browser, [this post](https://bergmanlab.uga.edu/running-a-ucsc-genome-browser-mirror-iii-loading-custom-data/) describes the detailed steps.
+
